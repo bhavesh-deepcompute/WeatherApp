@@ -37,6 +37,9 @@ const useStyles = makeStyles({
 
 export default function Weather() {
   const classes = useStyles();
+  const [inputCity, setInputCity] = useState("");
+  const [selectedCity, setSelectedCity] = useState(null);
+
   const [cities, setCities] = useState([
     {
       id: 119730,
@@ -188,15 +191,24 @@ export default function Weather() {
     },
   ]);
 
+  const handleCityChange = (cityName) => {
+	setSelectedCity(cityName);
+	setInputCity("");
+  };
+
+  const handleInputChange = (e) => {
+    setInputCity(e.target.value);
+  };
+
   return (
     <Grid container className="container">
       <Grid item md={8} className="search">
         <Autocomplete
-			style={{
-				width:500
-			}}
+          style={{
+            width: 500,
+          }}
           freeSolo
-		  size="small"
+          size="small"
           options={cities}
           classes={{
             option: classes.city,
@@ -205,7 +217,7 @@ export default function Weather() {
           autoHighlight
           getOptionLabel={(city) => city.name}
           renderOption={(city) => (
-            <CityDropdown city={city} />
+            <CityDropdown handleCityChange={handleCityChange} city={city} />
           )}
           renderInput={(params) => (
             <TextField
@@ -214,6 +226,9 @@ export default function Weather() {
               label="Choose a city"
               variant="outlined"
               fullWidth
+              value={inputCity}
+              name="inputCity"
+              onChange={handleInputChange}
             />
           )}
         />
@@ -221,32 +236,34 @@ export default function Weather() {
           Search
         </Button>
       </Grid>
-      <Grid item md={8} className="cards">
-        <Card className={classes.root} variant="outlined">
-          <CardContent>
-            <Typography
-              className={classes.title}
-              color="textSecondary"
-              gutterBottom
-            >
-              4:02pm,Oct 7
-            </Typography>
-            <Typography variant="h5" component="h2">
-              Bengaluru, IN
-            </Typography>
-            <Typography variant="h3" component="h2">
-              29°C
-            </Typography>
-            <Typography className={classes.pos} color="textPrimary">
-              Feels like 31°C. Scattered clouds. Light breeze
-            </Typography>
-            <Typography variant="body2" component="p">
-              2.1m/s NNW 1010hPa Humidity:55% UV:13 Dew point:19°C
-              Visibility:6.0km
-            </Typography>
-          </CardContent>
-        </Card>
-      </Grid>
+      {selectedCity ? (
+        <Grid item md={8} className="cards">
+          <Card className={classes.root} variant="outlined">
+            <CardContent>
+              <Typography
+                className={classes.title}
+                color="textSecondary"
+                gutterBottom
+              >
+                4:02pm,Oct 7
+              </Typography>
+              <Typography variant="h5" component="h2">
+                Bengaluru, IN
+              </Typography>
+              <Typography variant="h3" component="h2">
+                29°C
+              </Typography>
+              <Typography className={classes.pos} color="textPrimary">
+                Feels like 31°C. Scattered clouds. Light breeze
+              </Typography>
+              <Typography variant="body2" component="p">
+                2.1m/s NNW 1010hPa Humidity:55% UV:13 Dew point:19°C
+                Visibility:6.0km
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      ) : null}
     </Grid>
   );
 }

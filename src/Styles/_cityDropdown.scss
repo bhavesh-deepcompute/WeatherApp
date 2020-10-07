@@ -1,4 +1,6 @@
 .city-dropdown{
-    display: flex;
-    justify-content: center;
+    display: flex; 
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
 }
