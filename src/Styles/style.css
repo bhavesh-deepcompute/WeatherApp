@@ -1,6 +1,5 @@
 .container {
   padding: 3em;
-  margin: 3em 3em;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -13,6 +12,7 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  margin: 0em 3em;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -20,6 +20,15 @@
 }
 
 .search {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.city-dropdown {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
