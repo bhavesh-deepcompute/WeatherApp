@@ -42,6 +42,7 @@ export default function Weather() {
   const [selectedCity, setSelectedCity] = useState(null);
   console.log(selectedCity);
 
+
   const [cities, setCities] = useState([
     {
       id: 119730,
@@ -253,7 +254,7 @@ export default function Weather() {
                 color="textSecondary"
                 gutterBottom
               >
-                4:02pm,Oct 7
+                {new Date().toLocaleString()}
               </Typography>
               <Typography variant="h5" component="h2">
                 {selectedCity.name + ", " + selectedCity.sys.country}
