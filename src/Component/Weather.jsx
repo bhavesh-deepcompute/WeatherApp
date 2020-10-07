@@ -40,6 +40,7 @@ export default function Weather() {
   const classes = useStyles();
   const [inputCity, setInputCity] = useState("");
   const [selectedCity, setSelectedCity] = useState(null);
+  console.log(selectedCity);
 
   const [cities, setCities] = useState([
     {
@@ -195,18 +196,13 @@ export default function Weather() {
   const handleCityChange = (cityName) => {
     try {
       WeatherCalls.getWeather(cityName, (res) => {
-		  setCity(res.data);
-	  });
+        setSelectedCity(res.data);
+        setInputCity("");
+      });
     } catch (e) {
       console.log(e);
     }
-    setSelectedCity(cityName);
-    setInputCity("");
   };
-
-  const setCity = (weatherData) => {
-	  console.log(weatherData);
-  }
 
   const handleInputChange = (e) => {
     setInputCity(e.target.value);
@@ -260,18 +256,29 @@ export default function Weather() {
                 4:02pm,Oct 7
               </Typography>
               <Typography variant="h5" component="h2">
-                Bengaluru, IN
+                {selectedCity.name + ", " + selectedCity.sys.country}
               </Typography>
               <Typography variant="h3" component="h2">
-                29°C
+                {selectedCity.main.temp + "°C"}
               </Typography>
               <Typography className={classes.pos} color="textPrimary">
-                Feels like 31°C. Scattered clouds. Light breeze
+                Feels like {selectedCity.main.feels_like + "°C"}.{" "}
+                {selectedCity.weather[0].main}. {selectedCity.weather[0].description}
               </Typography>
-              <Typography variant="body2" component="p">
-                2.1m/s NNW 1010hPa Humidity:55% UV:13 Dew point:19°C
-                Visibility:6.0km
-              </Typography>
+              <Grid container spacing={2} className="city-card-info">
+                <Grid item md={4}>
+                  {selectedCity.wind.speed + "m/s"}
+                </Grid>
+                <Grid item md={4}>
+                  {selectedCity.main.pressure + "hPa"}
+                </Grid>
+                <Grid item md={4}>
+                  {"Humidity:" + selectedCity.main.humidity + "%"}
+                </Grid>
+                <Grid item md={4}>
+                  {"Visibility:" + selectedCity.visibility / 1000 + "km"}
+                </Grid>
+              </Grid>
             </CardContent>
           </Card>
         </Grid>
