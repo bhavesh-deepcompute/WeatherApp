@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import CityDropdown from "./CityDropdown";
+import WeatherCalls from "./../Service/weather";
 
 const useStyles = makeStyles({
   root: {
@@ -192,9 +193,20 @@ export default function Weather() {
   ]);
 
   const handleCityChange = (cityName) => {
-	setSelectedCity(cityName);
-	setInputCity("");
+    try {
+      WeatherCalls.getWeather(cityName, (res) => {
+		  setCity(res.data);
+	  });
+    } catch (e) {
+      console.log(e);
+    }
+    setSelectedCity(cityName);
+    setInputCity("");
   };
+
+  const setCity = (weatherData) => {
+	  console.log(weatherData);
+  }
 
   const handleInputChange = (e) => {
     setInputCity(e.target.value);
