@@ -195,18 +195,27 @@ export default function Weather() {
   ]);
 
   const handleCityChange = (cityName) => {
-    try {
       WeatherCalls.getWeather(cityName, (res) => {
-        setSelectedCity(res.data);
-        setInputCity("");
+        if(res.data){
+          setSelectedCity(res.data);
+          setInputCity("");
+        }else{
+          console.log(res);
+        }
       });
-    } catch (e) {
-      console.log(e);
-    }
   };
 
   const handleInputChange = (e) => {
     setInputCity(e.target.value);
+    if(e.target.value.length>2){
+      WeatherCalls.getCities(e.target.value, (res)=>{
+        if(res.data){
+          setCities(res.data.list);
+        }else{
+          console.log(res);
+        }
+      })
+    }
   };
 
   return (
@@ -224,7 +233,7 @@ export default function Weather() {
           }}
           fullWidth
           autoHighlight
-          getOptionLabel={(city) => city.name}
+          getOptionLabel={(city) => city? city.name: ""}
           renderOption={(city) => (
             <CityDropdown handleCityChange={handleCityChange} city={city} />
           )}

@@ -14,11 +14,21 @@ class WeatherCalss {
   }
 
   getWeather(city, callback) {
-      console.log(process.env);
     this.callGet(
       baseUrl +
         "weather?q=" +
         city +
+        "&appid="+
+        process.env.REACT_APP_API_KEY,
+      callback
+    );
+  }
+
+  getCities(searchTerm, callback){
+    this.callGet(
+      baseUrl +
+        "find?q=" +
+        searchTerm +
         "&appid="+
         process.env.REACT_APP_API_KEY,
       callback
