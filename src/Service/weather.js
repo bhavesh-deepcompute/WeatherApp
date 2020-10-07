@@ -18,6 +18,7 @@ class WeatherCalss {
       baseUrl +
         "weather?q=" +
         city +
+        "&units=metric" +
         "&appid="+
         process.env.REACT_APP_API_KEY,
       callback
@@ -29,6 +30,7 @@ class WeatherCalss {
       baseUrl +
         "find?q=" +
         searchTerm +
+        "&units=metric" +
         "&appid="+
         process.env.REACT_APP_API_KEY,
       callback
