@@ -107,7 +107,7 @@ export default function Weather() {
       </Grid>
       {selectedCity ? (
         <Grid item md={8} className="cards">
-          <Card className={classes.root} variant="outlined">
+          <Card className={classes.root} variant="elevation" elevation={2} >
             <CardContent>
               <Typography
                 className={classes.title}
