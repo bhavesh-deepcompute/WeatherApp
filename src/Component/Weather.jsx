@@ -7,8 +7,10 @@ import {
   CardContent,
   Typography,
   makeStyles,
+  IconButton
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
+import ReplayIcon from '@material-ui/icons/Replay';
 import CityDropdown from "./CityDropdown";
 import WeatherCalls from "./../Service/weather";
 
@@ -67,6 +69,10 @@ export default function Weather() {
     }
   };
 
+  const handleReload = () => {
+    handleCityChange(selectedCity.name);
+  }
+
   // useEffect(() => {
   //   setInterval(() => {
   //     if (selectedCity) handleCityChange(selectedCity.name);
@@ -112,7 +118,10 @@ export default function Weather() {
       {selectedCity ? (
         <Grid item md={8} xs={12} className="cards">
           <Card className={classes.root} variant="elevation" elevation={2}>
-            <CardContent>
+            <CardContent className="card-content" >
+            <IconButton className="reload-button" onClick={handleReload} >
+              <ReplayIcon />
+            </IconButton>
               <Typography
                 className={classes.title}
                 color="textSecondary"

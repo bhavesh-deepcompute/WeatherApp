@@ -28,6 +28,16 @@
           justify-content: center;
 }
 
+.reload-button {
+  position: absolute !important;
+  left: 80%;
+  top: 1%;
+}
+
+.card-content {
+  position: relative;
+}
+
 @media only screen and (max-width: 600px) {
   .cards {
     padding: 3em 0em !important;
