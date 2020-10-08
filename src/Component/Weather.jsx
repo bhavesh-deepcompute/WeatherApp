@@ -73,6 +73,12 @@ export default function Weather() {
     handleCityChange(selectedCity.name);
   }
 
+  const handleAutoComplete = (e,value) => {
+    if(value.name){
+      handleCityChange(value.name);
+    }
+  }
+
   // useEffect(() => {
   //   setInterval(() => {
   //     if (selectedCity) handleCityChange(selectedCity.name);
@@ -86,6 +92,7 @@ export default function Weather() {
           style={{
             width: 500,
           }}
+          onChange={handleAutoComplete}
           freeSolo
           size="small"
           options={cities}
@@ -94,7 +101,7 @@ export default function Weather() {
           }}
           fullWidth
           autoHighlight
-          getOptionLabel={(city) => (city ? city.name : "")}
+          getOptionLabel={(city) => (city.name ? city.name : "")}
           renderOption={(city) => (
             <CityDropdown handleCityChange={handleCityChange} city={city} />
           )}
