@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   Button,
@@ -40,34 +40,38 @@ export default function Weather() {
   const classes = useStyles();
   const [inputCity, setInputCity] = useState("");
   const [selectedCity, setSelectedCity] = useState(null);
-  console.log(selectedCity);
-
 
   const [cities, setCities] = useState([]);
 
   const handleCityChange = (cityName) => {
-      WeatherCalls.getWeather(cityName, (res) => {
-        if(res.data){
-          setSelectedCity(res.data);
-          setInputCity("");
-        }else{
-          console.log(res);
-        }
-      });
+    WeatherCalls.getWeather(cityName, (res) => {
+      if (res.data) {
+        setSelectedCity(res.data);
+        setInputCity("");
+      } else {
+        console.log(res);
+      }
+    });
   };
 
   const handleInputChange = (e) => {
     setInputCity(e.target.value);
-    if(e.target.value.length>2){
-      WeatherCalls.getCities(e.target.value, (res)=>{
-        if(res.data){
+    if (e.target.value.length > 2) {
+      WeatherCalls.getCities(e.target.value, (res) => {
+        if (res.data) {
           setCities(res.data.list);
-        }else{
+        } else {
           console.log(res);
         }
-      })
+      });
     }
   };
+
+  useEffect(() => {
+    setInterval(() => {
+      if (selectedCity) handleCityChange(selectedCity.name);
+    }, 60000);
+  }, [selectedCity]);
 
   return (
     <Grid container className="container">
@@ -84,7 +88,7 @@ export default function Weather() {
           }}
           fullWidth
           autoHighlight
-          getOptionLabel={(city) => city? city.name: ""}
+          getOptionLabel={(city) => (city ? city.name : "")}
           renderOption={(city) => (
             <CityDropdown handleCityChange={handleCityChange} city={city} />
           )}
@@ -107,7 +111,7 @@ export default function Weather() {
       </Grid>
       {selectedCity ? (
         <Grid item md={8} className="cards">
-          <Card className={classes.root} variant="elevation" elevation={2} >
+          <Card className={classes.root} variant="elevation" elevation={2}>
             <CardContent>
               <Typography
                 className={classes.title}
@@ -124,7 +128,8 @@ export default function Weather() {
               </Typography>
               <Typography className={classes.pos} color="textPrimary">
                 Feels like {selectedCity.main.feels_like + "°C"}.{" "}
-                {selectedCity.weather[0].main}. {selectedCity.weather[0].description}
+                {selectedCity.weather[0].main}.{" "}
+                {selectedCity.weather[0].description}
               </Typography>
               <Grid container spacing={2} className="city-card-info">
                 <Grid item md={4}>
