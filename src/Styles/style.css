@@ -34,6 +34,20 @@
   top: 1%;
 }
 
+.last-searches {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.searches-chip {
+  font-size: 1.2em !important;
+  margin: 0em 0.5em !important;
+}
+
 .card-content {
   position: relative;
 }
@@ -41,6 +55,14 @@
 @media only screen and (max-width: 600px) {
   .cards {
     padding: 3em 0em !important;
+  }
+  .last-searches {
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+  }
+  .searches-chip {
+    font-size: 1em !important;
+    margin: 0.5em 0.5em !important;
   }
 }
 

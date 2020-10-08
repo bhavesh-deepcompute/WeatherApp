@@ -7,10 +7,11 @@ import {
   CardContent,
   Typography,
   makeStyles,
-  IconButton
+  IconButton,
+  Chip
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
-import ReplayIcon from '@material-ui/icons/Replay';
+import ReplayIcon from "@material-ui/icons/Replay";
 import CityDropdown from "./CityDropdown";
 import WeatherCalls from "./../Service/weather";
 
@@ -42,6 +43,9 @@ export default function Weather() {
   const classes = useStyles();
   const [inputCity, setInputCity] = useState("");
   const [selectedCity, setSelectedCity] = useState(null);
+  const [prevSearches, setPrevSearches] = useState([]);
+
+  console.log(prevSearches);
 
   const [cities, setCities] = useState([]);
 
@@ -50,10 +54,25 @@ export default function Weather() {
       if (res.data) {
         setSelectedCity(res.data);
         setInputCity("");
+        setPrevSearches(filterSearch(res.data));
       } else {
         console.log(res);
       }
     });
+  };
+
+  const filterSearch = (city) => {
+    let newSearches = prevSearches.filter((lastCity) => {
+      if (city.name !== lastCity.name) {
+        return true;
+      }
+      return false;
+    });
+    if(newSearches.length>=5){
+      newSearches = newSearches.slice(1);
+    }
+    newSearches.push(city);
+    return newSearches;
   };
 
   const handleInputChange = (e) => {
@@ -71,13 +90,13 @@ export default function Weather() {
 
   const handleReload = () => {
     handleCityChange(selectedCity.name);
-  }
+  };
 
-  const handleAutoComplete = (e,value) => {
-    if(value.name){
+  const handleAutoComplete = (e, value) => {
+    if (value.name) {
       handleCityChange(value.name);
     }
-  }
+  };
 
   // useEffect(() => {
   //   setInterval(() => {
@@ -99,6 +118,7 @@ export default function Weather() {
           classes={{
             option: classes.city,
           }}
+          inputValue={inputCity}
           fullWidth
           autoHighlight
           getOptionLabel={(city) => (city.name ? city.name : "")}
@@ -125,10 +145,10 @@ export default function Weather() {
       {selectedCity ? (
         <Grid item md={8} xs={12} className="cards">
           <Card className={classes.root} variant="elevation" elevation={2}>
-            <CardContent className="card-content" >
-            <IconButton className="reload-button" onClick={handleReload} >
-              <ReplayIcon />
-            </IconButton>
+            <CardContent className="card-content">
+              <IconButton className="reload-button" onClick={handleReload}>
+                <ReplayIcon />
+              </IconButton>
               <Typography
                 className={classes.title}
                 color="textSecondary"
@@ -165,6 +185,17 @@ export default function Weather() {
           </Card>
         </Grid>
       ) : null}
+      <Grid item md={8} xs={12} className="last-searches">
+        {
+          prevSearches.map( (city) => {
+            return (
+              <Chip key={city.name} className="searches-chip" label={city.name+", "+city.sys.country} onClick={ () => {
+                handleCityChange(city.name)
+              }} size="medium" component="a" clickable variant="outlined" />
+                  )
+          })
+        }
+      </Grid>
     </Grid>
   );
 }
