@@ -9,7 +9,7 @@ class WeatherCalss {
         callback(res);
       })
       .catch((err) => {
-        throw new Error(err.message);
+        callback(err);
       });
   }
 

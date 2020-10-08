@@ -67,15 +67,15 @@ export default function Weather() {
     }
   };
 
-  useEffect(() => {
-    setInterval(() => {
-      if (selectedCity) handleCityChange(selectedCity.name);
-    }, 60000);
-  }, [selectedCity]);
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     if (selectedCity) handleCityChange(selectedCity.name);
+  //   }, 60000);
+  // }, [selectedCity]);
 
   return (
     <Grid container className="container">
-      <Grid item md={8} className="search">
+      <Grid item md={8} xs={12} className="search">
         <Autocomplete
           style={{
             width: 500,
@@ -110,7 +110,7 @@ export default function Weather() {
         </Button>
       </Grid>
       {selectedCity ? (
-        <Grid item md={8} className="cards">
+        <Grid item md={8} xs={12} className="cards">
           <Card className={classes.root} variant="elevation" elevation={2}>
             <CardContent>
               <Typography
