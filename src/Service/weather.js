@@ -17,21 +17,51 @@ class WeatherCalss {
     this.callGet(
       baseUrl +
         "weather?q=" +
-        city +
+        city.name +
         "&units=metric" +
-        "&appid="+
+        "&appid=" +
         process.env.REACT_APP_API_KEY,
       callback
     );
   }
 
-  getCities(searchTerm, callback){
+  getForecastData(city, callback) {
+    this.callGet(
+      baseUrl +
+        "onecall?lat=" +
+        city.coord.lat +
+        "&lon=" +
+        city.coord.lon +
+        "&units=metric" +
+        "&appid=" +
+        process.env.REACT_APP_API_KEY,
+        callback
+    );
+  }
+
+  getHistoricalData(city, dt, callback) {
+    this.callGet(
+      baseUrl +
+        "/onecall/timemachine?lat=" +
+        city.coord.lat +
+        "&lon=" +
+        city.coord.lon +
+        "&units=metric" +
+        "&dt=" +
+        + dt +
+        "&appid=" +
+        process.env.REACT_APP_API_KEY,
+        callback
+    );
+  }
+
+  getCities(searchTerm, callback) {
     this.callGet(
       baseUrl +
         "find?q=" +
         searchTerm +
         "&units=metric" +
-        "&appid="+
+        "&appid=" +
         process.env.REACT_APP_API_KEY,
       callback
     );

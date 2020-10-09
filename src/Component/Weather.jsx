@@ -8,7 +8,7 @@ import {
   Typography,
   makeStyles,
   IconButton,
-  Chip
+  Chip,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import ReplayIcon from "@material-ui/icons/Replay";
@@ -45,19 +45,61 @@ export default function Weather() {
   const [selectedCity, setSelectedCity] = useState(null);
   const [prevSearches, setPrevSearches] = useState([]);
 
-  console.log(prevSearches);
+  const [weatherData, setWeatherData] = useState([]);
 
   const [cities, setCities] = useState([]);
 
-  const handleCityChange = (cityName) => {
-    WeatherCalls.getWeather(cityName, (res) => {
+  const handleCityChange = (city) => {
+    WeatherCalls.getWeather(city, (res) => {
       if (res.data) {
         setSelectedCity(res.data);
         setInputCity("");
         setPrevSearches(filterSearch(res.data));
+        loadData(res.data);
       } else {
         console.log(res);
       }
+    });
+  };
+
+  const loadData = (city) => {
+    loadHistoricalData(city);
+    loadForecastData(city);
+  };
+
+  const loadHistoricalData = (city) => {
+    let newData = [];
+    for (let sinceDay = 1; sinceDay < 6; sinceDay++) {
+      let lastDate = new Date();
+      lastDate.setDate(lastDate.getDate() - sinceDay);
+      let dt = Math.floor(lastDate.getTime() / 1000);
+      WeatherCalls.getHistoricalData(city, dt, (res) => {
+        newData.push({
+          date: new Date(res.data.current.dt * 1000),
+          weather: res.data.current.weather[0],
+          temp: res.data.current.temp,
+          wind: res.data.current.wind_speed,
+        });
+        if(newData.length===5){
+          console.log(newData);
+        }
+      });
+    }
+  };
+
+  const loadForecastData = (city) => {
+    let newData = [];
+    WeatherCalls.getForecastData(city, (res) => {
+      res.data.daily.forEach((day) => {
+        newData.push({
+          date: new Date(day.dt * 1000),
+          weather: day.weather[0],
+          temp: day.temp.day,
+          wind: day.wind_speed,
+        });
+      });
+      console.log(newData);
+      return newData;
     });
   };
 
@@ -68,7 +110,7 @@ export default function Weather() {
       }
       return false;
     });
-    if(newSearches.length>=5){
+    if (newSearches.length >= 5) {
       newSearches = newSearches.slice(1);
     }
     newSearches.push(city);
@@ -89,12 +131,12 @@ export default function Weather() {
   };
 
   const handleReload = () => {
-    handleCityChange(selectedCity.name);
+    handleCityChange(selectedCity);
   };
 
   const handleAutoComplete = (e, value) => {
     if (value.name) {
-      handleCityChange(value.name);
+      handleCityChange(value);
     }
   };
 
@@ -122,9 +164,7 @@ export default function Weather() {
           fullWidth
           autoHighlight
           getOptionLabel={(city) => (city.name ? city.name : "")}
-          renderOption={(city) => (
-            <CityDropdown handleCityChange={handleCityChange} city={city} />
-          )}
+          renderOption={(city) => <CityDropdown city={city} />}
           renderInput={(params) => (
             <TextField
               size="small"
@@ -186,15 +226,22 @@ export default function Weather() {
         </Grid>
       ) : null}
       <Grid item md={8} xs={12} className="last-searches">
-        {
-          prevSearches.map( (city) => {
-            return (
-              <Chip key={city.name} className="searches-chip" label={city.name+", "+city.sys.country} onClick={ () => {
-                handleCityChange(city.name)
-              }} size="medium" component="a" clickable variant="outlined" />
-                  )
-          })
-        }
+        {prevSearches.map((city) => {
+          return (
+            <Chip
+              key={city.name}
+              className="searches-chip"
+              label={city.name + ", " + city.sys.country}
+              onClick={() => {
+                handleCityChange(city);
+              }}
+              size="medium"
+              component="a"
+              clickable
+              variant="outlined"
+            />
+          );
+        })}
       </Grid>
     </Grid>
   );

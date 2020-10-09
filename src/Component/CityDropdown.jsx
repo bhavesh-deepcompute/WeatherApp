@@ -4,7 +4,6 @@ export default function CityDropdown(props) {
   return (
     <div
       className="city-dropdown"
-      onClick={() => props.handleCityChange(props.city.name)}
     >
       <div>
         <span>
