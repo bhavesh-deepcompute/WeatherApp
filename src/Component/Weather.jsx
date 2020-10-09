@@ -45,9 +45,17 @@ export default function Weather() {
   const [selectedCity, setSelectedCity] = useState(null);
   const [prevSearches, setPrevSearches] = useState([]);
 
-  const [weatherData, setWeatherData] = useState([]);
+  const [weatherForcastData, setWeatherForcastData] = useState([]);
+  const [weatherHistoricalData, setWeatherHistoricalData] = useState([]);
+
 
   const [cities, setCities] = useState([]);
+
+  useEffect( () => {
+    if(weatherHistoricalData.length === 5 && weatherForcastData.length ===5 ){
+      console.log("print graph");
+    }
+  })
 
   const handleCityChange = (city) => {
     WeatherCalls.getWeather(city, (res) => {
@@ -80,8 +88,8 @@ export default function Weather() {
           temp: res.data.current.temp,
           wind: res.data.current.wind_speed,
         });
-        if(newData.length===5){
-          console.log(newData);
+        if (newData.length === 5) {
+          return setWeatherHistoricalData(newData);
         }
       });
     }
@@ -90,16 +98,17 @@ export default function Weather() {
   const loadForecastData = (city) => {
     let newData = [];
     WeatherCalls.getForecastData(city, (res) => {
-      res.data.daily.forEach((day) => {
-        newData.push({
-          date: new Date(day.dt * 1000),
-          weather: day.weather[0],
-          temp: day.temp.day,
-          wind: day.wind_speed,
-        });
+      res.data.daily.forEach((day, index) => {
+        if (index < 5) {
+          newData.push({
+            date: new Date(day.dt * 1000),
+            weather: day.weather[0],
+            temp: day.temp.day,
+            wind: day.wind_speed,
+          });
+        }
       });
-      console.log(newData);
-      return newData;
+      setWeatherForcastData(newData);
     });
   };
 
