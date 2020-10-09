@@ -13,7 +13,8 @@ import {
 import { Autocomplete } from "@material-ui/lab";
 import ReplayIcon from "@material-ui/icons/Replay";
 import CityDropdown from "./CityDropdown";
-import WeatherCalls from "./../Service/weather";
+import WeatherCalls from "../Service/weather";
+import Graph from "./Graph";
 
 const useStyles = makeStyles({
   root: {
@@ -47,15 +48,16 @@ export default function Weather() {
 
   const [weatherForcastData, setWeatherForcastData] = useState([]);
   const [weatherHistoricalData, setWeatherHistoricalData] = useState([]);
-
+  const [allWeatherData,setAllWeatherData] = useState([]);
 
   const [cities, setCities] = useState([]);
 
-  useEffect( () => {
-    if(weatherHistoricalData.length === 5 && weatherForcastData.length ===5 ){
+  useEffect(() => {
+    if (weatherHistoricalData.length === 5 && weatherForcastData.length === 5) {
+      setAllWeatherData(weatherHistoricalData.concat(weatherForcastData));
       console.log("print graph");
     }
-  })
+  }, [weatherHistoricalData,weatherForcastData]);
 
   const handleCityChange = (city) => {
     WeatherCalls.getWeather(city, (res) => {
@@ -251,6 +253,9 @@ export default function Weather() {
             />
           );
         })}
+      </Grid>
+      <Grid item md={8} xs={12} className="graph">
+        <Graph data={allWeatherData} />
       </Grid>
     </Grid>
   );
