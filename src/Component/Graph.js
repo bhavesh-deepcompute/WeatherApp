@@ -42,10 +42,8 @@ export default function Graph(props) {
 
   const format = timeFormat("%d %b");
   const parseDate = timeParse("%Y-%m-%d");
-  const formatDate = (date) => {
-    console.log(date);
-    return format(parseDate(date));
-  };
+  const formatDate = (date) => format(parseDate(date));
+
   // Compose together the scale and accessor functions to get point functions
   const compose = (scale, accessor) => (data) => scale(accessor(data));
   const xPoint = compose(xScale, x);
@@ -70,8 +68,21 @@ export default function Graph(props) {
           );
         })}
       </Group>
+      <AxisLeft
+        right={xMax+ margin.left}
+        left={margin.right}
+        scale={yScale}
+        stroke={orange}
+        tickStroke={orange}
+        tickLabelProps={() => ({
+          fill: orange,
+          dy: -5,
+          fontSize: 11,
+          textAnchor: "middle",
+        })}
+      />
       <AxisBottom
-        top={yMax + margin.top}
+        top={yMax}
         scale={xScale}
         tickFormat={formatDate}
         stroke={orange}
