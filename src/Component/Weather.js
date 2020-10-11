@@ -13,6 +13,7 @@ import {
 import { Autocomplete } from "@material-ui/lab";
 import ReplayIcon from "@material-ui/icons/Replay";
 import CityDropdown from "./CityDropdown";
+import { ParentSize } from "@vx/responsive";
 import WeatherCalls from "../Service/weather";
 import Graph from "./Graph";
 
@@ -55,7 +56,7 @@ export default function Weather() {
   useEffect(() => {
     if (weatherHistoricalData.length === 5 && weatherForcastData.length === 5) {
       let allData = weatherHistoricalData.concat(weatherForcastData);
-      allData.sort((a,b) => a.date.getTime() - b.date.getTime() )
+      allData.sort((a, b) => a.date.getTime() - b.date.getTime());
       setAllWeatherData(allData);
     }
   }, [weatherHistoricalData, weatherForcastData]);
@@ -85,9 +86,10 @@ export default function Weather() {
       lastDate.setDate(lastDate.getDate() - sinceDay);
       let dt = Math.floor(lastDate.getTime() / 1000);
       WeatherCalls.getHistoricalData(city, dt, (res) => {
-        let date=new Date(dt * 1000);
+        let date = new Date(dt * 1000);
         newData.push({
-          dateString: date.getFullYear()+"-"+date.getMonth()+"-"+date.getDate(),
+          dateString:
+            date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate(),
           date: date,
           weather: res.data.current.weather[0],
           temp: res.data.current.temp,
@@ -105,9 +107,10 @@ export default function Weather() {
     WeatherCalls.getForecastData(city, (res) => {
       res.data.daily.forEach((day, index) => {
         if (index < 5) {
-          let date=new Date(day.dt * 1000);
+          let date = new Date(day.dt * 1000);
           newData.push({
-            dateString: date.getFullYear()+"-"+date.getMonth()+"-"+date.getDate(),
+            dateString:
+              date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate(),
             date: date,
             weather: day.weather[0],
             temp: day.temp.day,
@@ -118,6 +121,18 @@ export default function Weather() {
       setWeatherForcastData(newData);
     });
   };
+
+  let chartToRender = (
+    <ParentSize>
+      {(parent) => (
+        <Graph
+          data={allWeatherData}
+          parentWidth={parent.width}
+          parentHeight={parent.height}
+        />
+      )}
+    </ParentSize>
+  );
 
   const filterSearch = (city) => {
     let newSearches = prevSearches.filter((lastCity) => {
@@ -261,7 +276,7 @@ export default function Weather() {
       ) : null}
       {selectedCity ? (
         <Grid item md={8} xs={12} className="graph">
-          <Graph data={allWeatherData} />
+          {chartToRender}
         </Grid>
       ) : null}
     </Grid>
