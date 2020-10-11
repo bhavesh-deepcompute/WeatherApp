@@ -13,6 +13,11 @@
     padding: 3em;
 }
 
+.graph{
+    display: flex;
+    justify-content: center;
+}
+
 .search{
     display: flex;
     justify-content: center;
@@ -27,6 +32,7 @@
 .last-searches{
     display: flex;
     justify-content: center;
+    padding: 1em 0em;
 }
 
 .searches-chip{

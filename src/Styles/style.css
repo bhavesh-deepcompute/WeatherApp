@@ -19,6 +19,15 @@
   padding: 3em;
 }
 
+.graph {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
 .search {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -41,6 +50,7 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  padding: 1em 0em;
 }
 
 .searches-chip {

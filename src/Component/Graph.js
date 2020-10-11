@@ -37,7 +37,7 @@ export default function Graph(props) {
   const yScale = scaleLinear({
     range: [yMax, 0],
     round: true,
-    domain: [0, Math.max(...data.map(y))+10],
+    domain: [0, Math.max(...data.map(y))+5],
   });
 
 

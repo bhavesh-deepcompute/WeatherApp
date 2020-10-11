@@ -48,7 +48,7 @@ export default function Weather() {
 
   const [weatherForcastData, setWeatherForcastData] = useState([]);
   const [weatherHistoricalData, setWeatherHistoricalData] = useState([]);
-  const [allWeatherData,setAllWeatherData] = useState([]);
+  const [allWeatherData, setAllWeatherData] = useState([]);
 
   const [cities, setCities] = useState([]);
 
@@ -57,7 +57,7 @@ export default function Weather() {
       setAllWeatherData(weatherHistoricalData.concat(weatherForcastData));
       console.log("print graph");
     }
-  }, [weatherHistoricalData,weatherForcastData]);
+  }, [weatherHistoricalData, weatherForcastData]);
 
   const handleCityChange = (city) => {
     WeatherCalls.getWeather(city, (res) => {
@@ -193,6 +193,24 @@ export default function Weather() {
           Search
         </Button>
       </Grid>
+      <Grid item md={8} xs={12} className="last-searches">
+        {prevSearches.map((city) => {
+          return (
+            <Chip
+              key={city.name}
+              className="searches-chip"
+              label={city.name + ", " + city.sys.country}
+              onClick={() => {
+                handleCityChange(city);
+              }}
+              size="medium"
+              component="a"
+              clickable
+              variant="outlined"
+            />
+          );
+        })}
+      </Grid>
       {selectedCity ? (
         <Grid item md={8} xs={12} className="cards">
           <Card className={classes.root} variant="elevation" elevation={2}>
@@ -236,27 +254,11 @@ export default function Weather() {
           </Card>
         </Grid>
       ) : null}
-      <Grid item md={8} xs={12} className="last-searches">
-        {prevSearches.map((city) => {
-          return (
-            <Chip
-              key={city.name}
-              className="searches-chip"
-              label={city.name + ", " + city.sys.country}
-              onClick={() => {
-                handleCityChange(city);
-              }}
-              size="medium"
-              component="a"
-              clickable
-              variant="outlined"
-            />
-          );
-        })}
-      </Grid>
-      <Grid item md={8} xs={12} className="graph">
-        <Graph data={allWeatherData} />
-      </Grid>
+      {selectedCity ? (
+        <Grid item md={8} xs={12} className="graph">
+          <Graph data={allWeatherData} />
+        </Grid>
+      ) : null}
     </Grid>
   );
 }
