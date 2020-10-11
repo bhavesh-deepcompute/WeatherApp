@@ -54,8 +54,9 @@ export default function Weather() {
 
   useEffect(() => {
     if (weatherHistoricalData.length === 5 && weatherForcastData.length === 5) {
-      setAllWeatherData(weatherHistoricalData.concat(weatherForcastData));
-      console.log("print graph");
+      let allData = weatherHistoricalData.concat(weatherForcastData);
+      allData.sort((a,b) => a.date.getTime() - b.date.getTime() )
+      setAllWeatherData(allData);
     }
   }, [weatherHistoricalData, weatherForcastData]);
 
@@ -84,8 +85,10 @@ export default function Weather() {
       lastDate.setDate(lastDate.getDate() - sinceDay);
       let dt = Math.floor(lastDate.getTime() / 1000);
       WeatherCalls.getHistoricalData(city, dt, (res) => {
+        let date=new Date(dt * 1000);
         newData.push({
-          date: new Date(res.data.current.dt * 1000),
+          dateString: date.getFullYear()+"-"+date.getMonth()+"-"+date.getDate(),
+          date: date,
           weather: res.data.current.weather[0],
           temp: res.data.current.temp,
           wind: res.data.current.wind_speed,
@@ -102,8 +105,10 @@ export default function Weather() {
     WeatherCalls.getForecastData(city, (res) => {
       res.data.daily.forEach((day, index) => {
         if (index < 5) {
+          let date=new Date(day.dt * 1000);
           newData.push({
-            date: new Date(day.dt * 1000),
+            dateString: date.getFullYear()+"-"+date.getMonth()+"-"+date.getDate(),
+            date: date,
             weather: day.weather[0],
             temp: day.temp.day,
             wind: day.wind_speed,

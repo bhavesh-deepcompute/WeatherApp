@@ -20,7 +20,7 @@ const xMax = width - margin.left - margin.right;
 const yMax = height - margin.top - margin.bottom;
 
 // We'll make some helpers to get at the data we want
-const x = (d) => d.date;
+const x = (d) => d.dateString;
 const y = (d) => +d.temp;
 export default function Graph(props) {
   let data = props.data;
@@ -37,13 +37,15 @@ export default function Graph(props) {
   const yScale = scaleLinear({
     range: [yMax, 0],
     round: true,
-    domain: [0, Math.max(...data.map(y))+5],
+    domain: [0, Math.max(...data.map(y)) + 5],
   });
-
 
   const format = timeFormat("%d %b");
   const parseDate = timeParse("%Y-%m-%d");
-  const formatDate = (date) => format(parseDate(date));
+  const formatDate = (date) => {
+    console.log(date);
+    return format(parseDate(date));
+  };
   // Compose together the scale and accessor functions to get point functions
   const compose = (scale, accessor) => (data) => scale(accessor(data));
   const xPoint = compose(xScale, x);
