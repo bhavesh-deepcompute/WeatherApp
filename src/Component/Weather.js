@@ -13,7 +13,6 @@ import {
 import { Autocomplete } from "@material-ui/lab";
 import ReplayIcon from "@material-ui/icons/Replay";
 import CityDropdown from "./CityDropdown";
-import { ParentSize } from "@vx/responsive";
 import WeatherCalls from "../Service/weather";
 import Graph from "./Graph";
 
@@ -75,22 +74,22 @@ export default function Weather() {
   };
 
   const loadData = (city) => {
-    if(prevSearches.length===0){
+    if (prevSearches.length === 0) {
       loadHistoricalData(city, true);
-      loadForecastData(city,true);
-    }else{
-      loadHistoricalData(city,false);
+      loadForecastData(city, true);
+    } else {
+      loadHistoricalData(city, false);
       loadForecastData(city, false);
     }
   };
 
-  const loadHistoricalData = (city,flag) => {
+  const loadHistoricalData = (city, flag) => {
     let newData;
     let counter;
-    if(flag){
+    if (flag) {
       newData = [];
       counter = 5;
-    }else{
+    } else {
       newData = weatherHistoricalData;
       counter = 0;
     }
@@ -100,26 +99,37 @@ export default function Weather() {
       let dt = Math.floor(lastDate.getTime() / 1000);
       WeatherCalls.getHistoricalData(city, dt, (res) => {
         let date = new Date(dt * 1000);
-        if(flag){
+        if (flag) {
           newData.push({
             dateString:
-              date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate(),
+              date.getFullYear() +
+              "-" +
+              (date.getMonth() + 1) +
+              "-" +
+              date.getDate(),
             date: date,
             weather: res.data.current.weather[0],
             [city.name]: res.data.current.temp,
             wind: res.data.current.wind_speed,
           });
-        }else{
-          let dayTemps = newData.map( (value) => {
-            if(value.dateString === date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()){
+        } else {
+          let dayTemps = newData.map((value) => {
+            if (
+              value.dateString ===
+              date.getFullYear() +
+                "-" +
+                (date.getMonth() + 1) +
+                "-" +
+                date.getDate()
+            ) {
               return {
                 ...value,
                 [city.name]: res.data.current.temp,
-              }
-            }else{
+              };
+            } else {
               return value;
             }
-          } );
+          });
           counter++;
           newData = dayTemps;
         }
@@ -132,35 +142,46 @@ export default function Weather() {
 
   const loadForecastData = (city, flag) => {
     let newData;
-    if(flag){
+    if (flag) {
       newData = [];
-    }else{
+    } else {
       newData = weatherForcastData;
     }
     WeatherCalls.getForecastData(city, (res) => {
       res.data.daily.forEach((day, index) => {
         if (index < 5) {
           let date = new Date(day.dt * 1000);
-          if(flag){
+          if (flag) {
             newData.push({
               dateString:
-                date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate(),
+                date.getFullYear() +
+                "-" +
+                (date.getMonth() + 1) +
+                "-" +
+                date.getDate(),
               date: date,
               weather: day.weather[0],
               [city.name]: day.temp.day,
               wind: day.wind_speed,
             });
-          }else{
-            let dayTemps = newData.map( (value) => {
-              if(value.dateString === date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()){
+          } else {
+            let dayTemps = newData.map((value) => {
+              if (
+                value.dateString ===
+                date.getFullYear() +
+                  "-" +
+                  (date.getMonth() + 1) +
+                  "-" +
+                  date.getDate()
+              ) {
                 return {
                   ...value,
                   [city.name]: day.temp.day,
-                }
-              }else{
+                };
+              } else {
                 return value;
               }
-            } );
+            });
             newData = dayTemps;
           }
         }
@@ -169,17 +190,7 @@ export default function Weather() {
     });
   };
 
-  let chartToRender = (
-    <ParentSize>
-      {(parent) => (
-        <Graph
-          data={allWeatherData}
-          parentWidth={parent.width}
-          parentHeight={parent.height}
-        />
-      )}
-    </ParentSize>
-  );
+  let chartToRender = <Graph data={allWeatherData} cities={prevSearches} />;
 
   const filterSearch = (city) => {
     let newSearches = prevSearches.filter((lastCity) => {
