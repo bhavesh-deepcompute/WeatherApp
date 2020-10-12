@@ -75,47 +75,94 @@ export default function Weather() {
   };
 
   const loadData = (city) => {
-    loadHistoricalData(city);
-    loadForecastData(city);
+    if(prevSearches.length===0){
+      loadHistoricalData(city, true);
+      loadForecastData(city,true);
+    }else{
+      loadHistoricalData(city,false);
+      loadForecastData(city, false);
+    }
   };
 
-  const loadHistoricalData = (city) => {
-    let newData = [];
+  const loadHistoricalData = (city,flag) => {
+    let newData;
+    let counter;
+    if(flag){
+      newData = [];
+      counter = 5;
+    }else{
+      newData = weatherHistoricalData;
+      counter = 0;
+    }
     for (let sinceDay = 1; sinceDay < 6; sinceDay++) {
       let lastDate = new Date();
       lastDate.setDate(lastDate.getDate() - sinceDay);
       let dt = Math.floor(lastDate.getTime() / 1000);
       WeatherCalls.getHistoricalData(city, dt, (res) => {
         let date = new Date(dt * 1000);
-        newData.push({
-          dateString:
-            date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate(),
-          date: date,
-          weather: res.data.current.weather[0],
-          temp: res.data.current.temp,
-          wind: res.data.current.wind_speed,
-        });
-        if (newData.length === 5) {
-          return setWeatherHistoricalData(newData);
+        if(flag){
+          newData.push({
+            dateString:
+              date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate(),
+            date: date,
+            weather: res.data.current.weather[0],
+            [city.name]: res.data.current.temp,
+            wind: res.data.current.wind_speed,
+          });
+        }else{
+          let dayTemps = newData.map( (value) => {
+            if(value.dateString === date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()){
+              return {
+                ...value,
+                [city.name]: res.data.current.temp,
+              }
+            }else{
+              return value;
+            }
+          } );
+          counter++;
+          newData = dayTemps;
+        }
+        if (newData.length === 5 && counter === 5) {
+          setWeatherHistoricalData(newData);
         }
       });
     }
   };
 
-  const loadForecastData = (city) => {
-    let newData = [];
+  const loadForecastData = (city, flag) => {
+    let newData;
+    if(flag){
+      newData = [];
+    }else{
+      newData = weatherForcastData;
+    }
     WeatherCalls.getForecastData(city, (res) => {
       res.data.daily.forEach((day, index) => {
         if (index < 5) {
           let date = new Date(day.dt * 1000);
-          newData.push({
-            dateString:
-              date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate(),
-            date: date,
-            weather: day.weather[0],
-            temp: day.temp.day,
-            wind: day.wind_speed,
-          });
+          if(flag){
+            newData.push({
+              dateString:
+                date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate(),
+              date: date,
+              weather: day.weather[0],
+              [city.name]: day.temp.day,
+              wind: day.wind_speed,
+            });
+          }else{
+            let dayTemps = newData.map( (value) => {
+              if(value.dateString === date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate()){
+                return {
+                  ...value,
+                  [city.name]: day.temp.day,
+                }
+              }else{
+                return value;
+              }
+            } );
+            newData = dayTemps;
+          }
         }
       });
       setWeatherForcastData(newData);

@@ -5,13 +5,15 @@ import { scaleLinear, scaleBand } from "@vx/scale";
 import { AxisBottom, AxisLeft } from "@vx/axis";
 import { timeParse, timeFormat } from "d3-time-format";
 import { useTooltip, useTooltipInPortal } from "@vx/tooltip";
+import cityTemperature, { CityTemperature } from '@vx/mock-data/lib/mocks/cityTemperature';
 import { localPoint } from "@vx/event";
 
 // We'll make some helpers to get at the data we want
 const x = (d) => d.dateString;
 const y = (d) => +d.temp;
 export default function Graph(props) {
-  console.log(props);
+  // console.log(props);
+  // console.log(cityTemperature[3]);
   const width = 800;
   const height = 300;
   let data = props.data;
@@ -125,7 +127,7 @@ export default function Graph(props) {
         top={tooltipTop}
         left={tooltipLeft}
       >
-        Data value <strong>{tooltipData}</strong>
+        Temp <strong>{tooltipData}</strong>
       </TooltipInPortal>
     )}
     </>
