@@ -11,6 +11,7 @@ import { localPoint } from "@vx/event";
 const x = (d) => d.dateString;
 const y = (d) => +d.temp;
 export default function Graph(props) {
+  console.log(props);
   const width = 800;
   const height = 300;
   let data = props.data;

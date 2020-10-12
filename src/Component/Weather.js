@@ -89,7 +89,7 @@ export default function Weather() {
         let date = new Date(dt * 1000);
         newData.push({
           dateString:
-            date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate(),
+            date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate(),
           date: date,
           weather: res.data.current.weather[0],
           temp: res.data.current.temp,
@@ -110,7 +110,7 @@ export default function Weather() {
           let date = new Date(day.dt * 1000);
           newData.push({
             dateString:
-              date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate(),
+              date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate(),
             date: date,
             weather: day.weather[0],
             temp: day.temp.day,
