@@ -76,7 +76,7 @@ export default function Graph(props) {
   const yScale = scaleLinear({
     range: [yMax, 0],
     round: true,
-    domain: [0, Math.max(...data.map(y)) + 5],
+    domain: [0, Math.max(...data.map(d => Math.max(...keys.map(key => Number(d[key])))))],
   });
 
   const colorScale = scaleOrdinal({
@@ -129,6 +129,8 @@ export default function Graph(props) {
             color={colorScale}
           >
             {(barGroups) => {
+              console.log(barGroups);
+              console.log(yMax);
               return barGroups.map((barGroup) => (
                 <Group
                   key={`bar-group-${barGroup.index}-${barGroup.x0}`}
@@ -148,11 +150,6 @@ export default function Graph(props) {
                           handleMouseOver(e, bar.key, bar.value)
                         }
                         onMouseOut={hideTooltip}
-                        // onClick={() => {
-                        //   if (!events) return;
-                        //   const { key, value } = bar;
-                        //   alert(JSON.stringify({ key, value }));
-                        // }}
                       />
                     );
                   })}
